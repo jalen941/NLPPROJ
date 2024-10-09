@@ -3,9 +3,11 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import time
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-train_data = pd.read_csv('train_amazon.csv', header=None, names=['label', 'text'])
-test_data = pd.read_csv('test_amazon.csv', header=None, names=['label', 'text'])
+train_data = pd.read_csv('train_amazon.csv', header=0, names=['label', 'text'])
+test_data = pd.read_csv('test_amazon.csv', header=0, names=['label', 'text'])
 
 train_data.dropna(subset=['text'], inplace=True)
 test_data.dropna(subset=['text'], inplace=True)
@@ -39,6 +41,17 @@ print(f"Model 1 Accuracy: {accuracy_1}")
 print(f"Model 1 Training Time: {train_time_1} seconds")
 print(f"Model 1 Inference Time: {inference_time_1} seconds")
 print("Model 1 Classification Report:\n", classification_report(y_test, y_pred_1, zero_division=0))
-print("Model 1 Confusion Matrix:\n", confusion_matrix(y_test, y_pred_1))
 
+
+
+conf_matrix = confusion_matrix(y_test, y_pred_1)
+print("Model 1 Confusion Matrix:\n", conf_matrix)
+
+
+plt.figure(figsize=(8,6))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=['Predicted Negative', 'Predicted Positive'], yticklabels=['Actual Negative', 'Actual Positive'])
+plt.title('Confusion Matrix')
+plt.ylabel('Actual')
+plt.xlabel('Predicted')
+plt.show()
 

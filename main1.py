@@ -8,12 +8,14 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import time
 from nltk.stem import WordNetLemmatizer
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 lemmatizer = WordNetLemmatizer()
 
 
-train_data = pd.read_csv('train_amazon.csv', header=None, names=['label', 'text'])
-test_data = pd.read_csv('test_amazon.csv', header=None, names=['label', 'text'])
+train_data = pd.read_csv('train_amazon.csv', header=0, names=['label', 'text'])
+test_data = pd.read_csv('test_amazon.csv', header=0, names=['label', 'text'])
 
 
 train_data.dropna(subset=['text'], inplace=True)
@@ -69,4 +71,19 @@ print(f"Model 2 Accuracy: {accuracy_2}")
 print(f"Model 2 Training Time: {train_time_2} seconds")
 print(f"Model 2 Inference Time: {inference_time_2} seconds")
 print("Model 2 Classification Report:\n", classification_report(y_test, y_pred_2, zero_division=0))
-print("Model 2 Confusion Matrix:\n", confusion_matrix(y_test, y_pred_2))
+
+
+
+
+conf_matrix = confusion_matrix(y_test, y_pred_2)
+print("Model 1 Confusion Matrix:\n", conf_matrix)
+
+
+plt.figure(figsize=(8,6))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=['Predicted Negative', 'Predicted Positive'], yticklabels=['Actual Negative', 'Actual Positive'])
+plt.title('Confusion Matrix')
+plt.ylabel('Actual')
+plt.xlabel('Predicted')
+plt.show()
+
+
